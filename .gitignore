@@ -1,0 +1,12 @@
+# Ignore all content by default so only the folder structure and README
+# files are tracked (no videos, subtitles, images, PDFs, HTML, etc.).
+
+# Ignore everything in the repository
+*
+
+# Re-include all directories so git recurses into them (keeps structure)
+!*/
+
+# Re-include README files and this .gitignore
+!README.md
+!.gitignore

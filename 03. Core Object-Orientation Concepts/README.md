@@ -563,4 +563,140 @@ Keep coupling loose.**
 
 ---
 
-_Notes for lectures 6–7 will be added as we progress._
+## Lecture 6 — Inheritance ⭐ (Pillar 3)
+
+**The problem it solves:** *"Without inheritance, we'd end up writing **similar
+code over and over again**."* The villain of this lecture is **duplication**.
+Inheritance = **reusing** an existing class implementation in new classes.
+
+### The Pokémon problem 🎮
+
+We need new types: Electric, Water, Flying Pokémon. Each has **everything the
+base Pokémon has + one special move:**
+
+```
+   Electric:  name, armor, hitPoints, attack(), defend()  +  Wild Charge()
+   Water:     name, armor, hitPoints, attack(), defend()  +  Aqua Tail()
+   Flying:    name, armor, hitPoints, attack(), defend()  +  Dragon Ascent()
+```
+
+First five things identical across all; only the special move differs.
+
+### ❌ Bad Option 1: Dump everything into the Pokémon class
+> *"We'd end up in a class that has **too many responsibilities**. Suddenly, all
+> Pokémon objects could swim, and fly, and discharge electricity. We definitely
+> don't want that."*
+
+A Pikachu using "Aqua Tail" makes no sense. Two design principles violated:
+
+- **Granularity** = keep classes small and focused, not huge and bloated.
+- **Separation of concerns** = each class handles ONE concern (one job), not many.
+
+> *"Creating **one-size-fits-all monolithic classes** is a major mistake in
+> object-oriented software development."*
+
+📌 **Bookmark this:** "Granularity and separation of concerns" — one class, one
+job. One of the most important principles in all of software design.
+
+### ❌ Bad Option 2: Keep the classes completely separate
+Each class now has a well-defined purpose — but `name`, `armor`, `hitPoints`,
+`attack()`, `defend()` are **copy-pasted into all four classes.** A bug in
+`attack()` must be fixed in four places. Adding a shared property means editing
+four places. Maintenance nightmare — the duplication pain from the start.
+
+```
+   Option 1: one bloated class  → everything can do everything (wrong)
+   Option 2: separate classes   → code repeated everywhere (wasteful)
+   We need: shared code WHERE shared, separate code WHERE separate.
+```
+
+### ✅ The solution: Inheritance
+> *"A class can **inherit all attributes and behavior from another class**."*
+
+```
+            ┌─────────────────────────────────────────────┐
+            │              CLASS: Pokémon                  │
+            │  (PARENT / SUPERCLASS)                       │
+            │  PROPERTIES:  name, armor level, hit points  │
+            │  METHODS:     attack(), defend()             │
+            └─────────────────────────────────────────────┘
+                               ▲
+            ┌──────────────────┼──────────────────┐
+              inherits            inherits            inherits
+            ▼                   ▼                   ▼
+   ┌────────────────┐  ┌────────────────┐  ┌────────────────┐
+   │ ElectricPokémon│  │  WaterPokémon  │  │ FlyingPokémon  │
+   │ (CHILD/SUBCLASS)│  │ (CHILD/SUBCLASS)│  │(CHILD/SUBCLASS)│
+   │ + Wild Charge()│  │ + Aqua Tail()  │  │ + DragonAsc()  │
+   └────────────────┘  └────────────────┘  └────────────────┘
+```
+
+- The **superclass** (Pokémon) holds all the **shared** stuff.
+- Each **subclass** **automatically gets** all of that, *without writing a single
+  line of code*.
+- Each child then adds **only its own extra**: its special move.
+
+Wrote the shared code **once** in the parent → three children reuse it for free.
+No duplication, no bloated god-class, each class stays focused.
+
+### The vocabulary 📖
+
+| Term A | Term B | Meaning |
+|---|---|---|
+| **Parent** class | **Superclass** | the class being inherited FROM (Pokémon) |
+| **Child** class | **Subclass** | the class that inherits (Electric/Water/Flying) |
+
+Both pairs mean the same thing; used interchangeably in the real world.
+
+### The bonus power: changes propagate automatically 🔄
+> *"If we **enhance or modify** the Pokémon class, all the other classes will
+> **automatically receive those changes**."*
+
+Fix a bug in `attack()` once in the superclass → every subclass is fixed
+instantly. Add a new shared method `rest()` → every subclass can now rest().
+Inheritance turns "fix it everywhere" into "fix it once."
+
+### The deeper design lesson
+The whole problem was about **where to put shared vs. unique code:**
+
+```
+   SHARED code → goes UP in the superclass  (written once)
+   UNIQUE code → goes DOWN in the subclass  (each adds its own)
+```
+
+Thinking tool forever: when several classes have overlapping code, ask *"What's
+shared? What's unique? Shared up in a parent, unique down in the children."*
+This serves granularity + separation of concerns + no duplication all at once —
+focused classes AND no repeated code.
+
+### The bridge to Pillar 4
+> *"Inheritance... finally paves the road to another handy feature called
+> **Polymorphism**."*
+
+Inheritance gives a *family* of related classes. Polymorphism lets you treat
+that whole family as *one* — grab a mixed bunch and tell them all "attack!"
+without caring which type each is; each attacks its own way. That's Pillar 4.
+
+### The whole pillar in one picture
+
+```
+   INHERITANCE = "is like that class, PLUS extras" — code reuse via parent/child
+
+            ┌───────────────────────────┐
+            │   SUPERCLASS (parent)     │
+            │   holds the SHARED code   │  ← written ONCE
+            └─────────────┬─────────────┘
+                          │ inherits
+           ┌──────────────┼──────────────┐
+           ▼              ▼              ▼
+     ┌──────────┐   ┌──────────┐   ┌──────────┐
+     │ SUBCLASS │   │ SUBCLASS │   │ SUBCLASS │
+     │  (child) │   │  (child) │   │  (child) │
+     │ + unique │   │ + unique │   │ + unique │  ← each adds ONLY its own extra
+     └──────────┘   └──────────┘   └──────────┘
+   shared code → UP (one place) | change parent → all children get it automatically
+```
+
+---
+
+_Notes for lecture 7 will be added as we progress._

@@ -108,4 +108,104 @@ real world).**
 
 ---
 
-_Notes for lectures 2–7 will be added as we progress._
+## Lecture 2 — Objects
+
+**The simplest definition:** an object is a **THING**. Just like in real life,
+objects can be simple or complex — a golf ball is an object, but so is a Falcon
+Heavy rocket. OO doesn't invent a weird abstract concept; it borrows how our
+brains already work: we think in terms of things every day.
+
+- The way we define an object depends on the **level of detail** we need.
+- **Objects can contain or refer to other objects.** (Falcon Heavy contains a
+  Tesla Roadster, which contains Star Man. Objects nest inside each other — a
+  seed for "composition" later in the course.)
+
+### The three parts of an object ⭐
+
+Every object is described using three things:
+
+```
+   ┌─────────────────────────────────────────┐
+   │                 OBJECT                   │
+   │   1. IDENTITY   ── "which one is this?"  │
+   │   2. STATE      ── "what is it like?"    │
+   │   3. BEHAVIOR   ── "what can it do?"     │
+   └─────────────────────────────────────────┘
+```
+
+#### 1. Identity — "which one is this?"
+Each object has its **own private identity** — a distinct, individual thing,
+not a category but _one specific instance_.
+
+> *"If we hit a golf ball, it won't affect all the other balls. Their state is
+> independent. Each has its private identity."*
+
+A bucket of 100 identical golf balls = 100 separate objects, each with its own
+identity. Hit ball #47, and ball #12 doesn't move. **Identity = "this is a
+distinct, individual thing, separate from all others."**
+
+#### 2. State — "what is it like?"
+State is described by **properties** (a.k.a. **attributes**) — the
+characteristics of the object. Golf ball example: color (white/colored/glow),
+weight, price, position, speed, acceleration.
+
+**Crucial sub-point:** some properties change over time, some don't.
+
+```
+   Golf ball object
+   ├── color:        white        ← stays the same
+   ├── weight:       45.9g        ← stays the same
+   ├── price:        $3           ← stays the same
+   ├── position:     (120, 45)    ← CHANGES as it flies
+   ├── speed:        0 m/s        ← CHANGES when hit
+   └── acceleration: 0            ← CHANGES
+```
+
+**State = the collection of all an object's properties AND their current
+values.** Two golf balls can share the same _properties_ but have different
+_states_ (one sitting still, one flying at 50 m/s). Each object has its **own**
+state, independent of every other object.
+
+#### 3. Behavior — "what can it do?"
+Behavior is **what the object can do** — its actions, the things it's capable of.
+
+**The sentence trick** (reusable for object-oriented analysis later):
+
+> **"The black dog barks."**
+
+| Part of speech | Word | What it tells us |
+|---|---|---|
+| **Noun** | dog | the **object** itself |
+| **Adjective** | black | a **property** (part of state) |
+| **Verb** | barks | the **behavior** (what it can do) |
+
+To find objects in a problem: look at the **nouns** (objects), **adjectives**
+(properties), and **verbs** (behaviors).
+
+### One complete object (golf ball)
+
+```
+   ┌──────────────────────────────────────────┐
+   │           GOLF BALL  (object)            │
+   │  IDENTITY:  this specific ball, separate │
+   │             from all other balls         │
+   │  STATE:     color=white, weight=45.9g,   │
+   │             price=$3, position=(120,45), │
+   │             speed=50m/s, accel=9.8m/s²   │
+   │  BEHAVIOR:  roll(), bounce(), fly()      │
+   └──────────────────────────────────────────┘
+```
+
+### The bridge to Lecture 3
+
+> *"How can we make this work in our code? For that, we need to introduce a new
+> concept: **the class**."*
+
+Intuition: a **cookie cutter** 🍪 = the **class** (the blueprint/definition).
+Each **cookie** pressed from it = an **object** (an individual instance). Same
+shape, but each cookie is its own thing with its own state. An object is the
+_thing_; a class is the _recipe for making the thing_.
+
+---
+
+_Notes for lectures 3–7 will be added as we progress._

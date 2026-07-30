@@ -699,4 +699,177 @@ without caring which type each is; each attacks its own way. That's Pillar 4.
 
 ---
 
-_Notes for lecture 7 will be added as we progress._
+## Lecture 7 — Polymorphism ⭐ (Pillar 4 — the final pillar)
+
+### The name is the definition
+> *"The word has Greek origins: **'polys'** means **many, much**, and **'morfé'**
+> means **form, shape**."*
+
+- **poly** = many · **morph** = form → **Polymorphism = "many forms."**
+> Dictionary: *"the condition of occurring in **several different forms**."*
+
+### Step 1 — revisit inheritance first
+Polymorphism doesn't make sense without inheritance. Back to our Pokémon family:
+all subclasses inherit name, armor, hitPoints, attack(), defend() from Pokémon.
+New requirement: Water Pokémon should cause **more damage** than basic Pokémon →
+need a **specialized implementation** of attack.
+
+### Step 2 — method overriding (the mechanism that makes polymorphism possible)
+> *"This is what we call **method overriding**. By **overriding** a method of the
+> superclass, we tell that we want a **different behavior in our subclass** than
+> the one we inherited."*
+
+When a subclass inherits a method, it gets the parent's version for free. But
+sometimes you want your *own* version. Overriding = "I know I inherited this
+method, but I'm replacing it with my own implementation."
+
+The strict rule:
+```
+   To OVERRIDE a method, the subclass method must have:
+     ✅ the SAME name        (attack)
+     ✅ the SAME parameters  (none here)
+   ...but a DIFFERENT body (its own behavior)
+```
+Same signature, different guts.
+
+Consequence (the seed of polymorphism):
+```
+   an_ElectricPokémon.attack()  →  runs Pokémon's attack()      (inherited)
+   a_FlyingPokémon.attack()     →  runs Pokémon's attack()      (inherited)
+   a_WaterPokémon.attack()      →  runs WaterPokémon's attack() (OVERRIDDEN)
+   a_basic_Pokémon.attack()     →  runs Pokémon's attack()      (it IS a Pokémon)
+```
+**Same method name, `attack()`. Different objects. Different behavior.**
+
+### Step 3 — the magic: work with them all as "just Pokémon"
+> *"Polymorphism lets us work with objects created from **any** of these classes.
+> We **don't need to know** whether it's a Water-, Flying- or Electric Pokémon
+> instance to call any of the common methods defined in the superclass."*
+
+**You can treat any subclass object as if it were a superclass object — call the
+common methods on it — and the RIGHT version runs automatically.**
+
+> *"We could create an **army of mixed Pokémon** and tell them to **attack at
+> once**. Each of them will execute the **right attack method** without us having
+> to know their exact type."*
+
+```
+   ARMY (mixed list, all stored as Pokémon):
+     [ Pikachu(Electric), Squirtle(Water), Charmander(basic), Pidgey(Flying) ]
+        │  for each pokémon in army:
+        │      pokémon.attack()      ← ONE line, no if/else, no type-checking
+        ▼
+   Pikachu.attack()    → Pokémon.attack()        (inherited)
+   Squirtle.attack()   → WaterPokémon.attack()   (OVERRIDDEN — more damage)
+   Charmander.attack() → Pokémon.attack()        (inherited)
+   Pidgey.attack()     → Pokémon.attack()        (inherited)
+```
+The code says `pokémon.attack()` — NOT "if Water call this, if Electric call
+that." No if statements. Yet each runs the correct version for its actual type.
+The runtime figures it out automatically.
+
+> **THAT is polymorphism** — *"many forms"* = the single method `attack()` takes
+> **many forms** depending on which object calls it, and you don't have to care
+> which is which.
+
+Instructor's one-line definition:
+> *"Polymorphism is about working **freely** with instances of **many different
+> classes** that share a **common super class**."*
+
+The recipe (3 ingredients):
+1. **many different classes** (a family: Electric, Water, Flying…)
+2. **a common superclass** (Pokémon)
+3. **work freely** — treat them all as the common type, call common methods;
+   each does the right thing automatically.
+
+### Step 4 — the Swift demo (seeing it in real code)
+```swift
+class Pokémon { func attack() { print("Pokémon attacks!") } }
+class ElectricPokémon: Pokémon { }                 // inherits, no override
+class WaterPokémon: Pokémon {
+    override func attack() { print("Water Pokémon attacks harder!") }  // OVERRIDES
+}
+class FlyingPokémon: Pokémon { }                   // inherits, no override
+
+let army = [Pokémon(), WaterPokémon(), ElectricPokémon(), FlyingPokémon()]
+for pokémon in army { pokémon.attack() }           // ONE line — polymorphism!
+```
+- Swift marks overrides with the `override` keyword (safety: no accidental
+  overrides). Only WaterPokémon overrides attack().
+- The `army` list holds **mixed** types but treats them all as **Pokémon** (the
+  common superclass) — the "work freely" part.
+
+Output:
+```
+   Pokémon attacks!                   ← basic
+   Water Pokémon attacks harder!      ← WaterPokémon (OVERRIDDEN!)
+   Pokémon attacks!                   ← ElectricPokémon (inherited)
+   Pokémon attacks!                   ← FlyingPokémon (inherited)
+```
+Same single line `pokémon.attack()` → 4 outputs, one different. The code never
+asked "what type are you?" **The same call, many forms.**
+
+### Why it's so powerful — Open/Closed
+Polymorphism lets you write code that's **open to new types without changing the
+old code.** Add a `FirePokémon` that also overrides `attack()` → the army loop
+stays **unchanged**; the new type just slots in.
+
+This is the **Open/Closed Principle**: *open* to extension (add new types),
+*closed* to modification (don't rewrite existing code). Add a new type →
+existing code keeps working untouched.
+
+```
+   ❌ WITHOUT polymorphism: a growing if/elif chain you must edit every time.
+   ✅ WITH polymorphism:  for pokémon in army: pokémon.attack()  ← never changes
+```
+Every new type = another `elif` = another edit to working code = another chance
+for a bug. Polymorphism collapses all of that into one line that never changes.
+
+---
+
+## 🏛️ The Four Pillars — complete
+
+| Pillar | One-word essence | Question it answers | Pokémon example |
+|---|---|---|---|
+| **1. Abstraction** | **Choosing** | "What details matter?" | Kept name/armor/hitPoints; ignored age/weight |
+| **2. Encapsulation** | **Protecting** | "Who can touch these details?" | Bundled data+behavior; hid the internals |
+| **3. Inheritance** | **Reusing** | "Where does shared vs. unique code go?" | Shared up in Pokémon; specials down in subclasses |
+| **4. Polymorphism** | **Unifying** | "How do I treat the whole family as one?" | Mixed army, one attack() call, each does the right thing |
+
+They build on each other in order:
+```
+   Abstraction ──▶ Encapsulation ──▶ Inheritance ──▶ Polymorphism
+   (choose)         (protect)          (reuse)          (unify)
+```
+
+**That's object-oriented programming.** Four pillars, one philosophy: model the
+real world as things (objects) described by blueprints (classes), showing only
+what matters (abstraction), protecting their insides (encapsulation), reusing
+shared structure (inheritance), and treating families as one (polymorphism).
+Everything in UML (Section 05) is just *drawing* these ideas on paper.
+
+---
+
+## Key takeaways — Section 03
+
+1. **Programming evolved to fight complexity:** unstructured (spaghetti code) →
+   structured (named functions) → object-oriented (self-contained objects that
+   model the real world).
+2. **An object** is a THING with **identity** (which one), **state**
+   (properties + current values), and **behavior** (what it can do). Nouns =
+   objects, adjectives = properties, verbs = behaviors.
+3. **A class** is the **blueprint**; an **object** is an **instance**. The class
+   declares properties (no values) and methods (functions embedded in the
+   class); you fill in values when creating objects. One class → many objects.
+4. **Abstraction (Pillar 1):** focus on what's important, ignore the rest.
+   Context-dependent — "what is this for?" decides what's essential.
+5. **Encapsulation (Pillar 2):** bundle data + behavior together AND hide the
+   internals (data hiding). Expose only as much as needed. Enables loose
+   coupling.
+6. **Inheritance (Pillar 3):** reuse — shared code up in the superclass, unique
+   code down in the subclasses. No duplication, no bloated god-class. Changes to
+   the parent propagate to children automatically.
+7. **Polymorphism (Pillar 4):** unify — treat a family of classes as their
+   common superclass; call a common method and each runs its own (possibly
+   overridden) version. Enables the Open/Closed Principle (open to extension,
+   closed to modification).

@@ -208,4 +208,116 @@ _thing_; a class is the _recipe for making the thing_.
 
 ---
 
-_Notes for lectures 3–7 will be added as we progress._
+## Lecture 3 — The Class
+
+**One-sentence definition:** a class is the **blueprint of an object** — a plan,
+a description of what an object will be. A class is **not** an object; it's the
+**template** that *produces* objects.
+
+```
+   CLASS (blueprint)          OBJECTS (instances)
+   the cookie cutter    →     the actual cookies
+   the blueprint        →     the actual building
+   the recipe           →     the actual cake
+   the Pokémon class    →     Pikachu, Charmander, Squirtle...
+```
+
+### How a class is built (Pokémon example 🎮)
+
+Building an OO system starts by **identifying the potential objects, their
+attributes and responsibilities** — connecting straight back to Lecture 2's
+identity / state / behavior.
+
+```
+   ┌─────────────────────────────────────────────┐
+   │              CLASS: Pokémon                  │
+   │  PROPERTIES (attributes): name, armor level, │
+   │                           hit points          │
+   │  METHODS (behaviors):     attack(), defend() │
+   └─────────────────────────────────────────────┘
+```
+
+#### 1. Properties (attributes) — the STATE
+The class declares **what properties exist** but does **NOT** say what the
+values are. *"The class tells us that each object has a name, armor level and
+hit points. It doesn't say what the name or the armor level is."*
+
+| | Class | Object |
+|---|---|---|
+| Properties | Declares that `name` exists | `name = "Pikachu"` |
+| **Has values?** | **NO — just the definition** | **YES — concrete values** |
+
+The class is a blank form with empty fields; the object is the form **filled in**.
+
+#### 2. Methods (behaviors) — the ACTIONS
+> *"We call these actions **methods**. Methods are blocks of code that can be
+> called to execute certain operations."*
+
+**Method** = the OO word for what structured programming called a **function**.
+Methods are basically **functions embedded in a class** — a bridge back to
+Lecture 1's structured programming era, where functions floated loose; in OO
+they live inside a class as its behaviors. Methods can take **input parameters**
+and **return values**.
+
+### From class to object: creating instances
+
+Two separate sources for what an object ends up with:
+
+- The **class** provides the **methods** (behaviors) — every Pokémon can attack
+  and defend.
+- **You** provide the **values** for the properties when you create each object
+  — this one is named "Pikachu" with armor 5 and 100 HP.
+
+```
+   CLASS: Pokémon  (ONE blueprint)
+        ├──▶  Object 1:  name="Pikachu",    armor=5,  hitPoints=100
+        ├──▶  Object 2:  name="Charmander", armor=3,  hitPoints=80
+        ├──▶  Object 3:  name="Squirtle",   armor=7,  hitPoints=120
+        └──▶  Object 4:  name="Bulbasaur",  armor=6,  hitPoints=110
+```
+
+Four objects, **one class**, zero duplicated code. Each object has its own
+identity and its own state, but they all share the same behaviors defined once
+in the class.
+
+### The big extra benefit: reuse 📦
+Classes can be packaged into **libraries or frameworks** and reused across
+programs — we don't have to **reinvent the wheel**. All modern OO languages
+ship built-in frameworks/libraries (buttons, lists, networking, file handling)
+as pre-made classes. Realistic catch: premade classes rarely cover all needs, so
+in practice we **both** use library classes **and** create our own.
+
+### Tying Lectures 2 & 3 together
+
+```
+   CLASS                          OBJECT(S)
+   the blueprint           ──▶    the actual instances
+   (no values, just the    ──▶    (concrete values filled in
+    shape)                         at creation)
+
+   ┌─────────────┐    create      ┌─────────────┐
+   │  Class: Dog │    instance    │  myDog      │
+   │  - name     │  ──────────▶   │ name="Rex"  │  ◀── values you provide
+   │  - color    │                │ color="blk" │
+   │  bark()     │                │ can bark()  │  ◀── behavior from the class
+   │  fetch()    │                │ can fetch() │
+   └─────────────┘                └─────────────┘
+```
+
+**Three things to never confuse again:**
+1. **Class** = the blueprint/definition (no values, just the shape). One per type.
+2. **Object** = an actual instance (concrete values). Many per type.
+3. **Instantiation** = the act of creating an object from a class (filling in
+   the values). _(A class is a *mold*; an object is what you pour *into* the mold
+   and pop out.)_
+
+### The bridge forward
+
+Next up: the **core object-orientation principles** — the **four pillars** ⭐:
+1. Abstraction (L4) · 2. Encapsulation (L5) · 3. Inheritance (L6) · 4. Polymorphism (L7).
+We now have the vocabulary (objects, classes, properties, methods) to tackle
+them. The pillars are *how we use those things well*.
+
+---
+
+_Notes for lectures 4–7 will be added as we progress._

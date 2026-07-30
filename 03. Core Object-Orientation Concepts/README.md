@@ -320,4 +320,123 @@ them. The pillars are *how we use those things well*.
 
 ---
 
-_Notes for lectures 4–7 will be added as we progress._
+## Lecture 4 — Abstraction ⭐ (Pillar 1)
+
+**One-sentence definition:** abstraction is a way of describing complex problems
+in simple terms by **ignoring some details**. Eliminating the minutiae helps us
+**focus on the bigger picture**. We can dig deeper once we have a broader
+understanding.
+
+Abstraction isn't being vague or lazy — it's a deliberate strategy for fighting
+complexity: get the big picture first, drill into details only when needed.
+
+### You're already an abstraction master 🧠
+> *"If I say **cat**, you know instantly what I'm talking about. I don't need to
+> say male, Persian, kitten or big/small. You understand I was talking about a
+> cat."*
+
+We don't freeze on every microscopic detail — we think in **categories and
+concepts** (cat, house, car). Our brains are wired to understand abstract ideas.
+Abstraction is literally how human cognition works: collapse a huge amount of
+detail into one simple, usable idea.
+
+```
+   Reality (infinite detail)              Abstraction (what we think)
+   a 3-yr-old female Persian cat,          "a cat" 🐱
+   orange fur, green eyes, 4.2kg...
+        ↓ throw away the minutiae ↓
+        keep only the essential concept: "cat"
+```
+
+### How abstraction works in OO
+> *"When we start defining a class, we **focus on the essential qualities** and
+> **discard unimportant ones**."*
+
+A class is the blueprint (Lecture 3). Designing a class means deciding **what
+goes in and what gets left out** — that decision *is* abstraction.
+
+Pokémon example: we kept name, armor, hit points, attack(), defend(). We ignored
+age, weight, height. The magic phrase: **"unessential in our current
+application."** Abstraction is **context-dependent** — what's "essential" vs
+"irrelevant" depends on what you're building.
+
+```
+   Same real Pokémon → abstracted for a BATTLE GAME:
+     keep name, armor, hitPoints, attack(), defend()
+     IGNORE age/weight/height — who cares in battle?
+
+   Same real Pokémon → abstracted for a BREEDING SIMULATOR:
+     keep species, gender, age, parents, breedWith()
+     IGNORE armor/hitPoints — who cares when breeding?
+```
+
+Same creature, two completely different classes — because abstraction keeps
+only what matters for the job at hand.
+
+> Instructor's summary: *"We **focus on what's important** and **ignore all the
+> details we don't need**."*
+
+### Why abstraction is Pillar 1
+It's the one you exercise *first* every time you design anything:
+
+1. **Abstraction** — decide what to include / ignore (design the class's contents)
+2. **Encapsulation** — bundle & protect what you included (Pillar 2)
+3. **Inheritance** — reuse classes via parent/child (Pillar 3)
+4. **Polymorphism** — treat different objects through a common interface (Pillar 4)
+
+Every class is an abstraction. Every UML diagram is an abstraction. When you
+draw a class diagram and decide "I'll show these 4 properties and 2 methods, but
+not those 10 other things" — that's abstraction in action.
+
+### Abstraction vs. Encapsulation — don't confuse them! 🚨
+
+| | Abstraction | Encapsulation |
+|---|---|---|
+| **What it does** | Decides **what** to include / ignore | Decides **how to protect & bundle** what you included |
+| **Question it answers** | *"Which details matter for this app?"* | *"Who's allowed to touch these details?"* |
+| **When** | At **design** time, choosing contents | At **implementation** time, hiding internals |
+| **Analogy** | Choosing what to put on the menu | Putting the kitchen behind a wall so diners only see the menu |
+
+> **Abstraction** is about *relevance* — what matters. **Encapsulation** is about
+> *protection* — what's hidden.
+
+### Two extra examples that cement it
+
+**1. A map 🗺️** — abstraction in physical form. The same patch of Earth becomes
+a road map (keep roads, drop elevation), a topographic map (keep elevation, drop
+street names), or a political map (keep borders, drop roads). Same reality,
+three different maps — each kept only what mattered for its job. A map that
+showed everything would be the size of the Earth itself: useless. **Being
+incomplete is what makes a map — and a class — useful.**
+
+**2. A `Student` — same person, three different classes 👩‍🎓.** Maya gets
+abstracted differently depending on the system:
+- **Grading system:** keeps studentId, name, courses, grades, gpa — ignores dorm,
+  meal plan, blood type.
+- **Housing/dorm system:** keeps studentId, dormRoom, roommate, mealPlan —
+  ignores GPA, courses, blood type.
+- **Health clinic:** keeps studentId, bloodType, allergies, vaccinations —
+  ignores GPA, dorm, meal plan.
+
+Same person, three classes. None is "the real Student" — each is an abstraction
+sculpted for a purpose. Smart question to ask of any class: *"What was
+deliberately left out, and why?"*
+
+### The pattern underneath all abstraction
+
+```
+   REALITY (infinite, messy)
+        │  "What is this FOR?"
+        ▼
+   PURPOSE decides what's ESSENTIAL vs IRRELEVANT
+        │
+        ▼
+   ABSTRACTION (keep the essential, drop the rest)
+```
+
+The single question that drives all abstraction: **"What is this for?"** Answer
+that, and you instantly know what to keep and what to ignore.
+
+---
+
+_Notes for lectures 5–7 will be added as we progress._

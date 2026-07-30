@@ -13,7 +13,7 @@ A living learning log for the **UML and Object-Oriented Design Foundations** cou
 |---|--------|--------|
 | 01 | [Introduction](./01.%20Introduction) | 🟢 Starting point |
 | 02 | [Software Project Management Foundations](./02.%20Software%20Project%20Management%20Foundations) | 🟢 Completed |
-| 03 | [Core Object-Orientation Concepts](./03.%20Core%20Object-Orientation%20Concepts) | 📝 To be documented as we learn |
+| 03 | [Core Object-Orientation Concepts](./03.%20Core%20Object-Orientation%20Concepts) | 🟡 In progress |
 | 04 | [Object-Oriented Analysis and Design](./04.%20Object-Oriented%20Analysis%20and%20Design) | 📝 To be documented as we learn |
 | 05 | [UML Basics and Fundamental Diagram Types](./05.%20UML%20Basics%20and%20Fundamental%20Diagram%20Types) | 📝 To be documented as we learn |
 | 06 | [Case Study: Designing a Note-Taking App from Scratch](./06.%20Case%20Study%20Designing%20a%20Note-Taking%20App%20from%20Scratch) | 📝 To be documented as we learn |

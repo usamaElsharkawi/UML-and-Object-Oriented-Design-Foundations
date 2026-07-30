@@ -439,4 +439,128 @@ that, and you instantly know what to keep and what to ignore.
 
 ---
 
-_Notes for lectures 5–7 will be added as we progress._
+## Lecture 5 — Encapsulation & Data Hiding ⭐ (Pillar 2)
+
+**One-sentence definition:** encapsulation means **packing together our
+properties and methods in a class, AND hiding the inner workings** so the
+outside world only sees what it needs to.
+
+Two parts — most people only remember the second. Encapsulation is **both** the
+bundling **and** the hiding.
+
+### Part 1: Bundling — "packing things together"
+> *"Think of how medicine is enclosed in a shell called **capsule**. In
+> object-orientation, this translates to **packing together our properties and
+> methods in a class**."*
+
+A medical capsule holds the medicine inside one tidy package. The data and the
+code that works on that data live together in one unit — the class. This fixes a
+weakness of structured programming (Lecture 1), where functions and data floated
+around separately: the functions *operated on* data but didn't *belong to* it.
+
+> **Encapsulation Part 1 = "the data and the behavior that belong together, live
+> together."**
+
+### Part 2: Hiding — "don't show the gears and levers"
+> *"We can use a **phone** without understanding electronics. We don't need to
+> know how the touchscreen, the camera or the logic board works. Similarly, we
+> **don't want to expose the inner workings of our class**. An object should only
+> reveal the essential features. This concept is called **data hiding**."*
+
+```
+   ┌─────────────────────────────────────────────────────────┐
+   │                    YOUR PHONE                           │
+   │   WHAT YOU SEE (public interface):                      │
+   │     touchscreen, power button, camera app, volume       │  ◀── you touch these
+   │   ════════════════ HIDDEN INSIDE ════════════════       │
+   │   WHAT YOU DON'T SEE (private internals):               │
+   │     logic board, battery cells, radio antenna, CPU      │  ◀── protected from you
+   └─────────────────────────────────────────────────────────┘
+```
+
+- **Public parts** (some methods) = the touchscreen — what other code may use.
+- **Private parts** (most properties, internal helper methods) = the logic board
+  — hidden from the outside.
+
+### Why do we hide? (the "so what?")
+
+1. **Protection from external interference 🛡️** — hiding internal details
+   protects the object from other code modifying it in unplanned ways, whether
+   *intentional or accidental*. (Like sealing a battery inside a case so nobody
+   pokes it with a screwdriver or spills water on it.)
+
+2. **Freedom to change the internals 🔧** — *"If you replace your phone's
+   battery, it won't affect the way you use your phone. Changes in the inner
+   workings of your phone don't matter to you."* If the outside world only
+   touches a class through its public interface, you can rip out and replace the
+   internals without breaking anyone — the interface stays the same, nothing
+   breaks. Huge for maintainability.
+
+3. **Preventing ripple effects 🌊** — if other code reaches directly into
+   private properties, your class and that code become tangled. Change your
+   property, you break theirs. Hide it, they can't depend on it, you're free to
+   change it.
+
+### The rule of thumb 📏
+> *"Expose only as much of your class properties and methods as needed for normal
+> usage."*
+
+Not "hide everything", not "expose everything" — **expose the minimum that lets
+people use the object correctly.** Just the touchscreen, not the logic board.
+
+### The payoff: loose coupling vs. tight coupling 🔗
+> *"Data hiding keeps dependencies between objects to a minimum. A
+> **tightly-coupled** system, with most objects depending on each other, is an
+> obvious sign of **bad design**. Any tiny modification will **cascade down** and
+> require changes elsewhere. It's like a never ending nightmare."*
+
+```
+   ❌ TIGHTLY COUPLED (no encapsulation):
+   A reaches INTO B's internals, B reaches INTO C's internals.
+   Change one internal → ripples through ALL of them. Nightmare. 🌊
+
+   ✅ LOOSELY COUPLED (with encapsulation):
+   A talks to B via B's public interface, B talks to C via C's public interface.
+   Change one internal → only that object knows. Others unaffected. ✅
+```
+
+**Encapsulation is the tool that makes loose coupling possible.** By hiding
+internals, you prevent other code from depending on them, so the system stays
+flexible and maintainable.
+
+### Abstraction vs. Encapsulation — airtight version
+
+| | Abstraction (Pillar 1) | Encapsulation (Pillar 2) |
+|---|---|---|
+| **What it does** | Decides **what** to include / ignore | Decides **how to bundle & protect** what you included |
+| **Question it answers** | *"Which details matter for this app?"* | *"Who's allowed to touch these details?"* |
+| **When** | At **design** time, choosing contents | At **implementation** time, hiding internals |
+| **Analogy** | Choosing what to put on the menu | The wall between kitchen & dining room; diners only see the menu |
+| **The word** | About **relevance** | About **protection** |
+
+They work together: **abstraction decides what's on the menu; encapsulation
+builds the wall between the kitchen and the dining room.** You need both.
+
+### The whole pillar in one picture
+
+```
+   ENCAPSULATION = BUNDLE + HIDE
+   ┌──────────────────────────────────────────┐
+   │                 CLASS                     │
+   │   ╔══════════════════════════════════╗   │
+   │   ║  PRIVATE (hidden internals)      ║   │  ← the "gears & levers"
+   │   ║   • properties (data)            ║   │     nobody outside can touch
+   │   ║   • internal helper methods       ║   │
+   │   ╚══════════════════════════════════╝   │
+   │   ─────── public interface ──────────    │
+   │   • the methods outsiders ARE allowed    │  ← the "touchscreen"
+   └──────────────────────────────────────────┘
+        other code talks ONLY through the public interface
+```
+
+**Bundle the data with the behavior. Hide the internals. Expose just enough.
+Keep coupling loose.**
+
+---
+
+_Notes for lectures 6–7 will be added as we progress._

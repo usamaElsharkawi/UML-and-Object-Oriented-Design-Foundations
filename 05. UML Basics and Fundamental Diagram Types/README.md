@@ -258,4 +258,128 @@ maintenance and repair** (a second actor hides here — the technician).
 
 ---
 
-_Notes for lectures 5–15 will be added as we progress._
+## Lectures 5-7 — Class Diagrams (theory + challenge + solution)
+
+### Lecture 5: The Theory
+
+Class diagrams are the **most frequently used** UML diagram type. After
+identifying the entities (Phase 3 of OOAD), we create class diagrams for each.
+A class = a **rectangle with three compartments** (top to bottom: name,
+attributes, operations).
+
+```
+   ┌─────────────────────────────────────┐
+   │               Trip                   │  ← NAME (noun, Upper Camel Case)
+   ├─────────────────────────────────────┤
+   │  name : String                       │  ← ATTRIBUTES (Lower Camel Case)
+   │  createdAt : Date                    │     format:  name : Type
+   │  homeCurrency : String               │
+   │  startsAt : Date                     │
+   │  endsAt : Date                       │
+   ├─────────────────────────────────────┤
+   │  setName(value: String)              │  ← OPERATIONS (verbs, Lower Camel Case)
+   │  getName() : String                  │     format:  name(params) : ReturnType
+   │  getEntries(from: Date, to: Date) : List │
+   └─────────────────────────────────────┘
+```
+
+**Top = what it IS. Middle = what it HAS. Bottom = what it DOES.**
+
+### Naming conventions ⭐
+
+| Compartment | Part of speech | Naming style | Example |
+|---|---|---|---|
+| **Name** | Noun, singular | **Upper Camel Case** | `Trip`, `ElevatorMaintenanceUnit` |
+| **Attributes** | Noun-ish | **Lower Camel Case** + `: Type` | `name: String`, `createdAt: Date` |
+| **Operations** | **Verb** | **Lower Camel Case** + `(params): ReturnType` | `diagnose()`, `setName(value: String)` |
+
+**Camel Case** = starting each word in a compound word with a capital (the humps
+look like a camel's back 🐪).
+- **Upper Camel Case** = first letter ALSO capitalized → **class names**
+- **Lower Camel Case** = first letter lowercase → **attributes & methods**
+
+### Why naming conventions matter
+> *"A naming convention lets us focus on important issues instead of arguing over
+> syntax and names. With a commonly accepted set of rules, we can easily read the
+> source code written by other developers, even if they are from another company,
+> country or continent. Standards are useful."*
+
+Without standards → everyone names things their own way → chaos. With standards →
+any developer on Earth can read your work. Standards remove trivial arguments so
+you can focus on real design.
+
+### Attributes — the details
+- Format: **`attributeName : Type`** (type separated by a colon).
+- Types are generic (`String`, `Date`, `Integer`) — adjusted to your programming
+  language when coding. UML is language-independent; the diagram is the shared
+  blueprint, the language-specific types are the building material.
+- Trip class example: `name`, `createdAt`, `homeCurrency`, `startsAt`, `endsAt`.
+
+### Operations — the details
+- Method names are **verbs** in Lower Camel Case.
+- **Parameters:** appear within parentheses as `name:Type` pairs, e.g.,
+  `setName(value: String)`.
+- **Return type:** add a colon after the closing parenthesis, then the type, e.g.,
+  `getName() : String`.
+- A method can have BOTH params and a return type: `getEntries(from: Date,
+  to: Date) : List`.
+- Keep it loose — `List` is enough; don't specify `List<Expense>`. The diagram is
+  about design, not implementation minutiae. (Abstraction at work!)
+
+### Lecture 6: The Challenge
+
+Connects back to the elevator use case challenge — the Technician actor. "In the
+not too distant future, such tasks will be automated."
+
+> *"Create the class diagram of an **elevator maintenance robot**."*
+
+Clues (guided challenge):
+1. Name your class using Upper Camel Case.
+2. Each robot needs a **unique identifier** — type `String` or any numeric type.
+3. The robot can **diagnose, service, and repair** the elevator → map to operations.
+4. Keep your class simple; adhere to naming conventions.
+
+### Lecture 7: The Solution (step-by-step build)
+
+1. **Name the class → `ElevatorMaintenanceUnit`** (Upper Camel Case ✅, noun ✅,
+   meaningful & specific). Lesson: names matter — a good name communicates intent
+   instantly.
+2. **Add the attribute → `identifier : String`** (Lower Camel Case ✅). Type choice:
+   String over Int because strings give more leeway (can be `"ELEV-001"`, a UUID,
+   etc.). The type choice encodes a design decision about flexibility.
+3. **Add 3 operations → `diagnose()`, `service()`, `repair()`** (verbs, Lower Camel
+   Case). Simple versions — no params or return types (the challenge said keep it
+   simple).
+
+**The complete solution:**
+```
+   ┌─────────────────────────────────────┐
+   │       ElevatorMaintenanceUnit        │
+   ├─────────────────────────────────────┤
+   │  identifier : String                 │
+   ├─────────────────────────────────────┤
+   │  diagnose()                          │
+   │  service()                           │
+   │  repair()                            │
+   └─────────────────────────────────────┘
+```
+
+**Teaser for next lecture:** the `+` signs next to attributes/operations in UML
+tools are **visibility tags** → connects to encapsulation (Pillar 2). That's
+Lecture 8.
+
+### The repeatable recipe (for any class diagram)
+
+```
+   1. Draw a rectangle divided into 3 compartments
+   2. TOP: class NAME — noun, singular, Upper Camel Case
+   3. MIDDLE: ATTRIBUTES — Lower Camel Case, format: name : Type
+   4. BOTTOM: OPERATIONS — verbs, Lower Camel Case,
+              format: name(params) : ReturnType
+   5. Use generic types (String, Date, Int) — translate to your language later
+   6. Keep it simple — don't over-specify (e.g., List not List<Expense>)
+```
+
+---
+
+_Notes for lectures 8–15 will be added as we progress._

@@ -159,4 +159,103 @@ systems can be modeled this way — the visual notation is genuinely universal.
 
 ---
 
-_Notes for lectures 2–15 will be added as we progress._
+## Lectures 2-4 — Use Case Diagrams (theory + challenge + solution)
+
+### Lecture 2: The Theory
+
+**Purpose:** visualize the functional requirements of the system — an **overview of
+the system**, not a single use case. You rarely create a use case diagram for one
+use case; it shows **groups of related use cases**. The visual version of
+Section 04's use cases.
+
+### The four building blocks ⭐
+
+| Block | Symbol | Meaning |
+|---|---|---|
+| **Use Case** | Oval 🥚 with a title | One piece of functionality (verb phrase: "Create a Trip Entry") |
+| **Actor** | Stick figure 🧍 (or box for systems) | Who/what interacts with the system (human OR system) |
+| **Association** | Line 〰️ | This actor can perform this use case |
+| **System Boundary** | Frame ▭ | What's inside (yours) vs. outside (not yours) |
+
+- **Use Case:** draw an oval, put the title inside. (Travel app examples: "Create
+  a Trip Entry," "Edit Trip," "Export App Database.")
+- **Actor:** stick figures; the actor's name goes below. Actors = human beings OR
+  other systems that interact with the system (Section 04 callback). **Layout
+  convention:** primary actors on the left, secondary ones on the right.
+- **Association:** a line between an actor and a use case = "this actor can
+  perform this use case." Example: a mobile User can create/edit a trip entry
+  but **cannot** export the database; the Power User can do **all** actions.
+  **The absence of a line is meaningful** — it shows what an actor canNOT do.
+- **System Boundary:** a frame around all use cases/actors that belong to a
+  given system, showing where the system ends. External systems are drawn as
+  separate actors on the right, with a different visual representation (e.g., a
+  box labeled «system») to show they're not human. Example: the travel app
+  relies on external cloud storage → cloud is an actor outside the frame; the
+  "Create a Trip Entry" and "Edit Trip" use cases connect to it.
+
+### What the diagram communicates
+> *"A clear way to communicate the **high-level features and the scope** of the
+> system. You can quickly tell what our system does just by looking at this Use
+> Case diagram."*
+
+Reading the travel app diagram: the system lets users create/edit trips; power
+users can export the database; the app relies on an external cloud system. **The
+absence of use cases shows what the system doesn't do** — a customer can easily
+spot missing features before a single line of code is written.
+
+### Two important caveats
+1. **Ignore advanced relationships** («include», «extend», generalization between
+   use cases) — they overcomplicate with questionable benefits. Focus on actors,
+   use cases, and their interactions.
+2. **The diagram does NOT replace written use cases.** The diagram = the
+   overview/map; the written use case (Section 04's title + actor + scenario) =
+   the detail/directions. You need **both**.
+
+### Lecture 3: The Challenge
+
+> *"Draw a Use Case diagram that provides an overview of an **elevator system**."*
+
+Questions to answer first: (1) What actors interact with an elevator? (2) What
+are the main functions of an elevator? Hint: elevators require **regular
+maintenance and repair** (a second actor hides here — the technician).
+
+### Lecture 4: The Solution (step-by-step build)
+
+1. **Identify the system → draw the frame.** System = "Elevator."
+2. **Identify the primary actor → the User.** One generalized actor representing
+   all passengers (abstraction at work). Placed on the left.
+3. **List the User's use cases** (read the control panel like a menu): Call
+   Elevator, Select Floor, Ride the Elevator, Operate Doors, Trigger Alarm.
+4. **Identify the secondary actor → the Technician.** Placed on the right. Has
+   different use cases: Inspect Elevator, Service Elevator, Repair Elevator.
+5. **The crossover:** the Technician can ALSO call the elevator, select the
+   floor, etc. But the average User should NOT perform maintenance/repair —
+   **those cases are exclusive to the technician role.** The absence of lines
+   shows what's forbidden.
+
+### The repeatable recipe (apply to ANY system)
+
+```
+   1. Identify the SYSTEM → draw the frame (boundary)
+   2. Identify the PRIMARY actor(s) → stick figure(s) on the left
+   3. List that actor's USE CASES → ovals; connect with lines
+   4. Identify SECONDARY actor(s) → stick figure(s)/boxes on the right
+   5. List their use cases → ovals; connect with lines
+   6. Connect crossover use cases (if an actor can do another's cases)
+   7. Remember: the ABSENCE of a line = "can't do this"
+```
+
+### Instructor's summary
+> *"Use cases help us understand the essential functional requirements. They
+> provide a **quick external overview** of the system. Make sure to keep your use
+> case diagram **simple** and focus on the **actors and the textual use case
+> descriptions**."*
+
+- **Quick external overview** — the diagram shows the system from the *outside*
+  (who uses it, what they can do); not about internals.
+- **Keep it simple** — focus on actors + use cases + descriptions; don't
+  overcomplicate with fancy relationships.
+
+---
+
+_Notes for lectures 5–15 will be added as we progress._

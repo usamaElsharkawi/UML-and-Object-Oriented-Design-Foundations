@@ -382,4 +382,116 @@ Lecture 8.
 
 ---
 
-_Notes for lectures 8–15 will be added as we progress._
+## Lecture 8 — Visibility: Public, Private, Protected, Package
+
+### The connection: this is encapsulation (Pillar 2) made visual
+
+Encapsulation had two halves (Section 03, L5): (1) **bundle** data + behavior, (2)
+**hide** the internals (data hiding). The class diagram (L5-7) showed the
+bundling. **Visibility is the *hiding* half, made visual** — it answers "who is
+allowed to touch each attribute and method?"
+
+> *"UML allows us to **control who can access** the attributes and the methods of
+> our classes."*
+
+### The four visibility levels ⭐
+
+From most open → most restricted:
+
+```
+   + (public)   ~ (package)   # (protected)   - (private)
+   everyone      same package   class + children  only the class itself
+```
+
+| Symbol | Name | Who can access it? | Analogy |
+|---|---|---|---|
+| `+` | **Public** | Anyone (code outside the object) | The touchscreen |
+| `~` | **Package** | Any class in the same package/namespace | Your department's shared tool |
+| `#` | **Protected** | The class + its child/subclasses | A family secret |
+| `-` | **Private** | Only the class itself | The logic board |
+
+- **`+` public:** *"A class method or attribute marked as public can be used by
+  code outside of the object."* = the public interface.
+- **`-` private:** *"Private attributes and methods can only be used within the
+  class that defines them. Cannot be accessed directly from other classes."* =
+  data hiding, the core of encapsulation.
+- **`#` protected:** *"Only child classes and the defining class will be able to
+  access that attribute or method."* A middle ground that **only exists because
+  of inheritance (Pillar 3)** — "you + your kids," but not strangers. The pillars
+  interlock: protected exists *because* inheritance exists.
+- **`~` package:** *"Makes sense in languages that let us group code into logical
+  units and provide a namespace. Available within its enclosing package."* Like a
+  department in a company — anyone in your package, not other packages.
+
+**The pattern:** as you move from `+` to `-`, access gets **tighter**. Public =
+everyone → Package = your group → Protected = your family → Private = only you.
+
+### The one rule for ALL OO languages 📏
+> *"UML provides these visibility tags, but it's up to us to adapt it to the
+> language we're using."* (Not every language supports all four — you translate
+> to your target language.)
+
+> *"There is only one rule that's commonly applicable to all object-oriented
+> languages: **Expose only as much as needed and hide everything else.**"*
+
+That's the golden rule of encapsulation restated — default to hiding; expose only
+what must be exposed.
+
+### The pattern that makes encapsulation work: Getters & Setters 🔒
+
+**The problem — public attributes = no control.** If `Trip.name` is `+` public,
+anyone can write `trip.name = "ab"`. But what if names must be ≥ 3 characters?
+*"There is **no way to enforce this requirement**."* Same for dates: startsAt
+must be earlier than endsAt, yet callers can "freely set any start or end date."
+
+**The solution — private attributes + public getters/setters:**
+1. Flip every attribute to `-` (private): now other objects can't set/retrieve
+   them directly. *"They are, well, private to the Trip class."*
+2. Provide **public getters and setters** for each — the controlled doorway.
+
+**The payoff — now you have CONTROL 🎛️:**
+> *"We are now in **full control of our class's internal data**. Setters let us
+> check the input argument, and getters allow us to modify the value before
+> returning it."*
+
+- **Setters** = control what goes *in* (validation): `setName()` can reject names
+  < 3 chars; `setStartsAt()` can reject dates after `endsAt`.
+- **Getters** = control what comes *out* (transformation): e.g., return a date in
+  the user's time zone even though stored in UTC internally.
+
+**Before vs. after:**
+```
+   BEFORE: + name : String        ← public: anyone sets ANYTHING, no validation
+   AFTER:  - name : String        ← private: sealed inside
+           + getName() : String   ← public getter (controlled read)
+           + setName(value:String)← public setter (validates: ≥ 3 chars)
+```
+
+**The pattern:** attributes are `-` (private) or `#` (protected) — *hide the
+data*; getters/setters are `+` (public) — *expose controlled access*. Not dogma:
+if nobody outside needs an attribute, don't add a getter/setter — hide it
+completely. **Expose only as much as needed.**
+
+### The bridge forward
+> *"So far, we've seen how to represent a **single class**. Class diagrams let us
+> also show the **relationships between the classes** in our system. We'll talk
+> about relationships next."*
+
+L5-8 drew one class at a time. Next (L9-11): the **lines between classes** —
+associations, generalization (inheritance!), dependency/aggregation/composition/
+realization. Where Pillar 3 and relationships get their visual notation.
+
+### Tying it back to the pillars
+
+| Pillar | How it appears in visibility |
+|---|---|
+| **Encapsulation (Pillar 2)** | The whole point — hide internals (`-`), expose the interface (`+`) |
+| **Inheritance (Pillar 3)** | `#` protected only exists because children inherit |
+| **Abstraction (Pillar 1)** | We choose which attributes/methods to even put on the diagram; visibility is the next layer of that choice |
+
+**Visibility = encapsulation made visual**, with a nod to inheritance (via
+protected). The four symbols are the standard notation for "who can touch this?"
+
+---
+
+_Notes for lectures 9–15 will be added as we progress._

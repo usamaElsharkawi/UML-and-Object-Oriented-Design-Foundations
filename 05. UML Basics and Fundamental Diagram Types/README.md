@@ -494,4 +494,114 @@ protected). The four symbols are the standard notation for "who can touch this?"
 
 ---
 
-_Notes for lectures 9–15 will be added as we progress._
+## Lecture 9 — Associations
+
+### Where this fits
+For four lectures (5-8) we drew **one class at a time**. Now: the **relationships
+between classes** — the lines you draw *between* the rectangles. Use cases/user
+stories (Section 04) help reveal not just the classes but *how they connect*.
+
+Example (travel expense app user story): *"As a traveller, I want to track my
+expenses while abroad..."* → two classes jump out: **Trip** and **Expense**. The
+relationship: *"Each Trip will include its travel expenses."*
+
+### The association: a solid line between classes
+> *"To express this relationship, we draw a **solid line** between these classes.
+> This line represents an **association**. The association tells us that the
+> classes refer to each other."*
+
+```
+   ┌──────────┐                    ┌──────────┐
+   │   Trip   │ ─────────────────  │  Expense │
+   └──────────┘                    └──────────┘
+```
+
+A solid line = "these two classes are associated; they refer to each other."
+
+### Bidirectional vs. Directed associations ⭐
+
+A plain solid line = **bidirectional** (both classes refer to each other). This
+creates **tight coupling** — a Section 03 / Pillar 2 callback:
+
+> *"What happens if the Expense also refers to the Trip? We'd need to also bring
+> the Trip class with it. This doesn't make sense, since we should be able to use
+> the Expense **without the Trip**. Tight coupling is something you should
+> definitely try to avoid."*
+
+**The solution: a directed association (an open arrowhead):**
+> *"UML lets us express **directed associations**: by drawing a solid line that
+> ends with an **open arrowhead**, we show that only one of the classes refers to
+> the other. The arrow points to the class that's **referred to**."*
+
+```
+   ┌──────────┐                    ┌──────────┐
+   │   Trip   │ ─────────────────▶ │  Expense │
+   └──────────┘   open arrowhead   └──────────┘
+```
+
+Read: **Trip → Expense** = "Trip knows about Expense, but Expense does NOT know
+about Trip." Now Expense is **free** — reusable anywhere without dragging Trip
+along. A tightly-coupled bidirectional relationship becomes a **loosely-coupled
+directed** one.
+
+| Type | Symbol | Meaning | Coupling |
+|---|---|---|---|
+| **Bidirectional** (plain) | Solid line `───` | Both classes refer to each other | Tighter ⚠️ |
+| **Directed** (arrow) | Solid line + open arrowhead `───▶` | Only ONE class refers to the other | Looser ✅ |
+
+**Rule of thumb:** prefer the directed association unless you genuinely need both
+classes to know about each other. Keeps coupling low and classes reusable.
+
+### Multiplicity: "how many?" ⭐
+
+A relationship also says *"how many of one are connected to how many of the
+other?"* — called **multiplicity.** Put the notation at the end of the line near
+the class it describes.
+
+| Notation | Read as | Meaning | Travel app example |
+|---|---|---|---|
+| `*` | "zero or more" | any number, including none | A trip can have zero or more expenses |
+| `1` | "exactly one" | one, required (**the default**) | A trip must have exactly one home currency |
+| `0..1` | "zero or one" | optional single | A trip may or may not have a single note |
+| `1..*` | "one or more" | at least one, required | (extension) |
+| `0..*` | "zero or more" | same as `*` | (extension) |
+
+```
+   ┌──────────┐                  ┌──────────┐
+   │   Trip   │ 1 ──────────── * │  Expense │
+   └──────────┘                  └──────────┘
+                  ↑                ↑
+       "one trip"            "has many expenses"
+```
+
+- Multiplicities can appear at **both ends** of the line.
+- **The default is `1`** — if no multiplicity is shown, assume exactly one.
+
+### One more detail: naming the property
+You can label the line with the **name of the class property** that holds the
+reference (e.g., "expenses" if Trip has an `expenses` attribute). Ties the visual
+relationship to the actual attribute. Nice-to-have, not essential.
+
+### The bridge forward
+> *"The Association isn't the only kind of relationship. Next, we're going to talk
+> about **Generalization**."*
+
+Associations = the **simplest** relationship ("these classes refer to each
+other"). Next: **Generalization** = the UML name for **inheritance (Pillar 3)** —
+where parent/child class hierarchy gets its visual notation.
+
+### Tying it back
+
+| Concept from before | How it appears in associations |
+|---|---|
+| Encapsulation / coupling (Pillar 2) | Bidirectional = tight coupling (avoid); directed = loose coupling (prefer) |
+| Phase 3 → relationships (Section 04) | Use cases/user stories reveal how classes connect |
+| Objects containing other objects (Section 03, L2) | "objects may contain or refer to other objects" — associations draw exactly this |
+
+**Association = "these classes refer to each other"**, drawn as a solid line,
+refined with a direction (arrow) to control coupling, and refined with
+multiplicity (`*`, `1`, `0..1`) to say *how many*.
+
+---
+
+_Notes for lectures 10–15 will be added as we progress._

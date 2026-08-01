@@ -604,4 +604,130 @@ multiplicity (`*`, `1`, `0..1`) to say *how many*.
 
 ---
 
-_Notes for lectures 10–15 will be added as we progress._
+## Lecture 10 — Generalization
+
+### The big reveal: generalization IS inheritance (Pillar 3)
+Generalization is the **UML name for inheritance**. The concept is identical to
+Section 03, Lecture 6 — parent/superclass, child/subclass, shared code up, unique
+code down. This lecture just gives that concept its **standard visual symbol.**
+
+> *"In UML, we use **generalization** to express that one model element is **based
+> on another** model element."*
+
+("Based on another" = "inherits from another." Called *generalization* because
+the arrow points from the *specific* child to the *general* parent.)
+
+### The symbol: solid line + HOLLOW arrowhead → parent
+> *"Generalization is represented as a **solid line with a hollow arrowhead** that
+> points to the parent."*
+
+```
+                                      hollow arrowhead (empty triangle ▷)
+   ┌──────────────┐                                          ┌──────────┐
+   │ BusinessTrip │ ────────────────────────────────────────▶ │   Trip   │
+   │  (child)     │           solid line                      │ (parent) │
+   └──────────────┘                                          └──────────┘
+```
+
+Read: **BusinessTrip → Trip** = "BusinessTrip inherits from Trip." Arrow points
+from the *specific* child to the *general* parent.
+
+### The crucial symbol distinction ⚠️
+
+| Relationship | Symbol | Arrowhead | Points to | Meaning |
+|---|---|---|---|---|
+| **Directed association** (L9) | Solid line + arrow | **Open** ▶ (simple V) | The class being *referred to* | "A refers to/uses B" |
+| **Generalization** (L10) | Solid line + arrow | **Hollow** ▷ (empty triangle) | The **parent** | "A inherits from B" |
+
+> **The hollow triangle is the universal sign for inheritance in UML.** See it
+> pointing at a class → the class at the tail is a subclass.
+
+### What goes in the child class
+> *"Because BusinessTrip inherits everything from its parent, we must **only
+> specify the attributes and operations that are specific to the child**."*
+
+The "shared code up, unique code down" principle from Section 03, L6. The child
+doesn't repeat the parent's attributes — it only declares its *own extras*.
+BusinessTrip automatically gets Trip's name, createdAt, homeCurrency,
+getters/setters… without writing them again.
+
+### The "IS-A" vs "HAS-A" test ⭐ (the key mental model)
+
+The classic way to decide which relationship to use:
+
+```
+   "Is X a Y?"        → YES → generalization (inheritance)
+   "Does X have a Y?" → YES → association (or aggregation/composition)
+```
+
+**"IS-A" → Generalization:** Is a `BusinessTrip` a `Trip`? ✅ / Is a
+`WaterPokémon` a `Pokémon`? ✅ / Is a `Car` a `Vehicle`? ✅ — the child *is a
+specialized version of* the parent.
+
+**"HAS-A" → Association:** Does a `Trip` have `Expenses`? ✅ / Does a `Library`
+have `Books`? ✅ / Does a `Car` have an `Engine`? ✅ — one class *contains or
+uses* the other.
+
+> 🚨 **The #1 beginner design mistake:** using inheritance (IS-A) when you should
+> use association (HAS-A). "A Car IS-A Engine" sounds wrong → it's not inheritance,
+> it's an association. The IS-A/HAS-A test catches this instantly — if the
+> sentence sounds weird, it's not generalization.
+
+> 🎁 **Teaser for L11:** "HAS-A" comes in two flavors — **aggregation** (parts can
+> exist on their own) vs **composition** (parts die with the whole). Both are
+> "HAS-A," but the lifecycle differs. Lecture 11 refines "HAS-A."
+
+### A parent can have multiple children
+One parent, many children (the Pokémon family: Pokémon → Electric/Water/Flying).
+Multiple arrows all point up to the same parent.
+
+### Multiple inheritance — the debate
+> *"A parent can have multiple children. We can also have child classes that
+> inherit from different parents. Some languages support **multiple inheritance**
+> — C++, Perl, Python."*
+
+> *"Many **modern** languages only allow **single inheritance** — inheriting from
+> one parent. Single inheritance **reduces complexity** and avoids the **ambiguity**
+> that comes with multiple inheritance."*
+
+The ambiguity: if two parents both have a `save()` method, which one runs when
+the child calls `save()`? (The "diamond problem.") Single inheritance = simpler
+& safer (modern default: Java, Swift, C#). Multiple inheritance = more powerful
+but error-prone. UML can draw either; you translate to whatever your language
+supports.
+
+### Generalization isn't only for classes
+> *"UML does not restrict generalization to classes. It can also be used in use
+> case or component diagrams — a child element receives its parent's attributes,
+> operations, and relationships."*
+
+The hollow-triangle symbol & meaning ("inherits from") are reusable across
+diagram types (e.g., a specialized actor inheriting from a general one).
+
+### Tying it back to the pillars
+
+| Concept from before | How it appears in generalization |
+|---|---|
+| **Inheritance (Pillar 3)** | The whole point — generalization IS inheritance, drawn |
+| Parent/superclass, child/subclass | Arrow from child → parent; parent at the hollow arrowhead |
+| "Shared code up, unique code down" | Child only declares its OWN extras; inherits the rest |
+| Granularity & separation of concerns | Specialized children stay focused; no bloated god-class |
+| **Encapsulation (Pillar 2)** | `#` protected (L8) exists *because* of this — protected = "class + its children" |
+
+Beautiful interlock: **visibility (L8) + generalization (L10) together express
+"who can touch what, across a family of classes."** Protected members are
+accessible to exactly the classes reachable by the hollow-triangle arrows.
+
+### The relationships so far
+
+| Relationship | Symbol | Meaning | "test" | Pillar |
+|---|---|---|---|---|
+| **Association** (L9) | Solid line (+ optional ▶) | "A refers to/uses B" | "HAS-A" | objects referring to objects |
+| **Generalization** (L10) | Solid line + **hollow** ▷ → parent | "A inherits from B" | "IS-A" | **Inheritance (Pillar 3)** |
+
+Lecture 11 adds: dependency, aggregation, composition, realization — completing
+the toolkit. The two most important ones are now locked in.
+
+---
+
+_Notes for lectures 11–15 will be added as we progress._

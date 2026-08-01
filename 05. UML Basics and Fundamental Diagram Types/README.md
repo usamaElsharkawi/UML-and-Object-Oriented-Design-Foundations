@@ -730,4 +730,177 @@ the toolkit. The two most important ones are now locked in.
 
 ---
 
-_Notes for lectures 11–15 will be added as we progress._
+## Lecture 11 — Dependency, Aggregation, Composition & Realization
+
+The **final relationships lecture** — completes the toolkit with four more
+relationship types. The "HAS-A" insight from Lecture 10 pays off directly: we
+now split "HAS-A" into its two flavors (aggregation vs. composition).
+
+### 1. Dependency — "uses temporarily" 🏃
+
+> *"We talk about a **dependency** if changes in one of the classes may cause
+> changes to the other."*
+
+The **weakest** relationship — A doesn't own or contain B, it just *uses* B
+somehow. If you change B, A might break.
+
+**Symbol:** a **dashed line** + open arrowhead ▶, pointing to the dependency.
+```
+   ┌──────────┐                     ┌──────────┐
+   │    A     │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ▶ │    B     │
+   └──────────┘   dashed line        └──────────┘
+                  "A depends on B"
+```
+Note: **dashed** (not solid) — the key visual difference from association.
+
+**Dependency vs. Association — the crucial difference ⚠️**
+> *"Association indicates that a class **has attributes of the other class's
+> type**, whereas dependency is usually created when the class **receives a
+> reference to the other class**, for instance, through a **member function
+> parameter**."*
+
+| | Association | Dependency |
+|---|---|---|
+| How A holds B | A has an **attribute** of type B (long-term) | A gets B **temporarily** (e.g., method param) |
+| Lifetime | A holds B as long as A exists | A only knows B *during the method call* |
+| Example | `Trip { expenses: List<Expense> }` | `Trip { convert(currency: Currency) }` |
+
+- **Association** = "I keep a reference to you as one of my parts" (HAS-A)
+- **Dependency** = "I just use you for a moment, then forget you" (USES)
+
+### 2. Aggregation — "HAS-A, but parts survive" 📚
+
+> *"Aggregation represents a **part-whole relationship** drawn as a solid line
+> with a **hollow diamond** at the owner's end."*
+
+A *special kind of association* — a part-whole where **the parts can exist
+independently of the whole.**
+
+```
+   ┌──────────┐                     ┌──────────┐
+   │  Library │ ◇────────────────── │   Book   │
+   │ (whole)  │  hollow diamond     │  (part)  │
+   └──────────┘  at OWNER's end     └──────────┘
+```
+
+The **hollow diamond ◇** goes at the owner/whole end. Example: a Library HAS-A
+Books — if you shut down the library, the books don't vanish; they go elsewhere.
+The parts have their *own independent lifecycle*.
+
+> *"This relationship is considered **redundant** because it expresses the same
+> thing as the association."* — many designers just use an association. But
+> aggregation adds a hint: "this is specifically a part-whole, with independent
+> parts." Use it to emphasize the part-whole nature.
+
+### 3. Composition — "HAS-A, and parts die too" 🔥
+
+> *"Composition is a **stronger form of association**. It shows that **the parts
+> live and die with the whole**. Composition implies **ownership**. When the
+> owning object is destroyed, the contained objects will be destroyed, too."*
+
+Also a part-whole, BUT the parts **cannot survive without the whole** — they
+have *no independent lifecycle*.
+
+**Symbol:** a **filled diamond** ◆ at the owner's end.
+```
+   ┌──────────┐                     ┌──────────┐
+   │   Trip   │ ◆────────────────── │  Expense │
+   │ (whole)  │  FILLED diamond     │  (part)  │
+   └──────────┘  at OWNER's end     └──────────┘
+```
+
+> *"The expenses of a trip **can't exist without the trip**. If we delete the
+> Trip instance, its expenses are going to be **removed, too**."*
+
+**Aggregation vs. Composition ⭐:**
+
+| | Aggregation (hollow ◇) | Composition (filled ◆) |
+|---|---|---|
+| Parts survive without whole? | ✅ Yes — independent lifecycle | ❌ No — parts die with the whole |
+| Ownership | "has" (loose) | **"owns"** (strict) |
+| Diamond | **Hollow** ◇ (empty) | **Filled** ◆ (solid) |
+| Example | Library ◇── Book (books survive) | Trip ◆── Expense (expenses vanish) |
+
+> **The diamond tells the lifecycle story.** Hollow = "parts can leave" 📖;
+> filled = "parts are fused to the whole" 🔥. **Hollow = free parts, filled =
+> fused parts.** How to choose: "Can the part exist on its own?" Yes →
+> aggregation; No → composition.
+
+### 4. Realization — "implements a contract" 📜
+
+> *"Realization indicates that a class **implements the behavior specified by
+> another model element**."*
+
+One element *specifies* a contract (an interface — what methods should exist);
+another element *actually implements* them.
+
+**Symbol:** a **hollow triangle** ▷ (from generalization) on the interface end +
+**dashed lines** (from dependency) to the implementer.
+```
+   ┌──────────────┐                     ┌────────────────┐
+   │ BusinessTrip │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ▷│ «interface»    │
+   │(implementer) │   dashed + hollow    │  TripInterface │
+   └──────────────┘   triangle           └────────────────┘
+```
+
+A **mix**: hollow triangle (generalization) + dashed line (dependency). It's like
+generalization but dashed — you're not *inheriting implementation*, you're
+*implementing a contract*.
+
+**The polymorphism connection 🎯:**
+> *"We could specify an interface to ensure that all current and upcoming Trip
+> classes provide a **common set of methods**. This is a useful feature that
+> allows **polymorphic behavior**."*
+
+There's Pillar 4! Interfaces + realization = the mechanism for polymorphism.
+Define an interface (contract) → multiple classes realize it → treat them all as
+the interface type and call the common methods → each does its own thing =
+polymorphism.
+
+### The complete relationship toolkit — all 6
+
+| # | Relationship | Symbol | Meaning | "Test" | Strength |
+|---|---|---|---|---|---|
+| 1 | **Association** | Solid line (+ optional ▶) | "has a reference to" | "HAS-A" | medium |
+| 2 | **Generalization** | Solid line + hollow ▷ → parent | "inherits from" | "IS-A" | strong |
+| 3 | **Dependency** | **Dashed** line + open ▶ | "uses temporarily" | "USES" | weakest |
+| 4 | **Aggregation** | Solid line + **hollow** ◇ (at owner) | "has parts that survive" | "HAS-A (loose)" | medium |
+| 5 | **Composition** | Solid line + **filled** ◆ (at owner) | "owns parts that die with it" | "HAS-A (strict)" | strong |
+| 6 | **Realization** | **Dashed** line + hollow ▷ (→ interface) | "implements a contract" | "IMPLEMENTS" | strong |
+
+**Visual cheat-sheet:**
+```
+   Association:    A ─────────── B        "A has/uses B"
+   Directed assoc: A ──────────▶ B        "A refers to B (one way)"
+   Generalization: A ──────────▷ B        "A inherits from B" (IS-A)
+   Dependency:     A ─ ─ ─ ─ ─ ▶ B        "A depends on B" (temporary)
+   Aggregation:    A ◇────────── B        "A has B (parts survive)"
+   Composition:    A ◆────────── B        "A owns B (parts die too)"
+   Realization:    A ─ ─ ─ ─ ─ ▷ B        "A implements B (contract)"
+```
+
+**The decision flowchart:**
+```
+   Is A a kind of B?                          → Generalization (IS-A, ▷)
+   Does A implement B's contract/interface?   → Realization (dashed ▷)
+   Does A own B's lifecycle (B dies with A)?  → Composition (filled ◆)
+   Does A have B as a part (B can survive)?   → Aggregation (hollow ◇)
+   Does A hold B as an attribute long-term?   → Association (solid line)
+   Does A just use B temporarily (param)?     → Dependency (dashed ▶)
+```
+
+### Tying it back to the pillars — all four now have UML notation!
+
+| Pillar | UML notation |
+|---|---|
+| **Abstraction (Pillar 1)** | Choosing what's on the diagram + interfaces (realization) |
+| **Encapsulation (Pillar 2)** | Visibility (`+`/`-`/`#`/`~`) + the "HAS-A" variants control coupling |
+| **Inheritance (Pillar 3)** | Generalization (hollow ▷) |
+| **Polymorphism (Pillar 4)** | Realization (dashed ▷) + method overriding |
+
+**The four pillars are now fully drawable.** That's the whole point of UML class
+diagrams — and we've completed the structural family of UML.
+
+---
+
+_Notes for lectures 12–15 will be added as we progress._

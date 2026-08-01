@@ -903,4 +903,307 @@ diagrams — and we've completed the structural family of UML.
 
 ---
 
-_Notes for lectures 12–15 will be added as we progress._
+## Lectures 12-14 — The Behavioral Family (Sequence, Activity & Statechart)
+
+### The big shift: from STATIC to DYNAMIC
+
+> *"Use cases and class diagrams are **static diagrams**. They are great at
+> representing the **structure** of our system. But what if we need to show **how
+> the objects interact with each other?** When are objects created and how long
+> are they around? Static diagrams **can't answer these questions**."*
+
+Everything before this was **static** — a photograph 📸 of the system (classes,
+relationships). The behavioral family is **dynamic** — a video 🎥 of what happens
+when the system runs.
+
+| | Structural (static) | Behavioral (dynamic) |
+|---|---|---|
+| **Question** | What ARE the things? | What HAPPENS? |
+| **Metaphor** | A photograph 📸 | A video 🎥 |
+| **Diagrams** | Class diagram | Sequence, Activity, Statechart |
+
+Three behavioral diagrams, each answering a different "what happens" question:
+
+```
+   Sequence   "WHO talks to WHO, and WHEN?"        (messages between objects over time)
+   Activity   "WHAT STEPS happen, and WHAT ORDER?"  (workflows and business processes)
+   Statechart "HOW does ONE object change over its LIFE?" (states & transitions of one object)
+```
+
+---
+
+### Lecture 12 — Sequence Diagrams
+
+**"Who talks to who, and when?"**
+
+> *"The most common dynamic diagram is the **sequence diagram**. We use the
+> sequence diagram to describe the **flow of logic in one particular scenario**."*
+
+Key: **one particular scenario** — traces one path through a use case. Not all
+possible interactions, just one flow.
+
+**Building blocks:**
+
+1. **Object boxes at the top** 📦 — each box = an object. Named as instances
+   (lowercase): `aTrip` not `Trip`, `anExpense` not `Expense`. Can add type after
+   a colon: `aTrip : Trip` (instance name : class name).
+2. **Lifelines — dotted vertical lines** ⏱️ — the dotted line beneath each box
+   shows **the time the instance exists** during the scenario. **Time flows
+   downward.**
+3. **Messages — arrows between lifelines** ➡️ — *"A message is basically a
+   **method call**."* The vertical position = WHEN it happens (higher = earlier,
+   lower = later). Read top-to-bottom in order.
+
+```
+   ┌──────────┐                ┌──────────────┐
+   │ aManager │                │  aTripEntity │
+   │ :Manager │                │  :TripEntity │
+   └────┬─────┘                └──────┬───────┘
+        │ :                           │ :
+        │  ── create() ─────────────▶ │ :    ← message 1 (first)
+        │  ── addNote("hi") ────────▶ │ :    ← message 2 (second)
+        │  ◀────── return ─────────── │ :    ← message 3 (third)
+        │ :                           │ :
+   TIME ↓ (flows downward)            ↓
+```
+
+**The message types ⭐:**
+
+| Message type | Symbol | When to use it |
+|---|---|---|
+| **Create** | **Dashed** line + open arrowhead ▶ | Creating a new object (lifeline begins) |
+| **Synchronous** (regular) | **Solid** line + **filled** arrowhead ▶ | Normal method call — caller waits for response |
+| **Return** | **Dashed** line + open arrowhead ◀ | Response coming back (often omitted — implicit) |
+| **Asynchronous** | **Solid** line + **stick** arrowhead | Caller doesn't wait — runs in background |
+| **Self** | Loop-back arrow on same lifeline | An object calling its own method |
+| **Delete** | Arrow + a **cross** ✕ at target's lifeline | Destroying an object (lifeline ends) |
+
+- **Synchronous:** caller waits for response (blocking).
+- **Asynchronous:** *"doesn't need to wait for a response. Gets executed in the
+  **background**... doesn't **block** the caller."* Stands at the core of modern
+  software — improves responsiveness, better UX (lengthy operations won't block
+  the UI). Drawn with a **stick arrowhead** instead of filled. (Difference is
+  subtle — can add a note to clarify.)
+- **Return messages** are implicit for synchronous calls — only show them if
+  important. Keep the diagram clean.
+- **Delete:** the lifeline ends with an ✕ — the object no longer exists.
+
+**Design philosophy (abstraction at work):**
+> *"Sequence diagrams should provide an **overview** of what's going on in a
+> given scenario. We **don't try to represent all the method calls precisely**.
+> Instead, we **focus on the most relevant parts**."*
+
+**The diagrams feed each other (iterative design):**
+> *"By getting more profound insights into the inner workings of our objects, we
+> may need to refine their behavior, or even **add new classes** or establish new
+> relationships. That's perfectly fine. The process of designing a software system
+> is all about **finding out what's missing**."*
+
+Drawing a sequence diagram may reveal you need a new class → go back and update
+the class diagram. The OOAD process (Section 04) is iterative.
+
+---
+
+### Lecture 13 — Activity Diagrams
+
+**"What steps happen, and in what order?"**
+
+> *"The activity diagram is used to model the **flow of activities** in a system
+> and the **decisions** that are made along the way. Typically used to model
+> **workflows or business processes**."*
+
+While a sequence diagram shows *objects communicating*, an activity diagram
+shows *a process flowing through steps*. Think of it as a **flowchart**. Examples:
+steps to process a customer order; steps to create a new trip.
+
+**Building blocks:**
+
+1. **Initial node — a filled circle ⬤** — the starting point: "the workflow
+   begins here."
+2. **Action nodes + flow lines ➡️** — nodes = actions (steps); flow lines =
+   lines ending with an **open arrowhead** pointing in the direction of logic
+   flow.
+   ```
+      ⬤ ──▶ [Action 1] ──▶ [Action 2] ──▶ [Action 3] ──▶ ...
+   ```
+3. **Decision node — a hollow diamond ◇** — the "if/else." Has a **single
+   incoming flow** and **two or more outbound flows**. Each outbound flow has a
+   **guard** — a Boolean condition in **square brackets** `[...]`. Guards must
+   be **mutually exclusive** — only one outbound flow is chosen.
+   ```
+                       ┌── [condition A] ──▶ [do X]
+   [check something] ◇
+                       └── [condition B] ──▶ [do Y]
+   ```
+4. **Merge node — a hollow diamond ◇** — the reverse of a decision: **two or
+   more inbound flows** and a **single outbound flow**. Joins flows back
+   together. (Same diamond symbol; decision = 1 in/many out, merge = many in/1
+   out.)
+5. **Fork — a thick horizontal line ▬** — expresses **parallel behavior**.
+   **One incoming flow** → **several outgoing concurrent flows**. Example:
+   "storing a new order in the file system **while** also sending a confirmation
+   email." Or grocery checkout: cashier ringing up **while** another person bags.
+6. **Join — a thick horizontal line ▬** — synchronizes concurrent tasks.
+   **Two or more incoming flows** → **one outgoing flow**. The outgoing flow
+   executes only **after all incoming flows** are processed. (Fork splits;
+   join merges — both are thick lines.)
+7. **Final node — a filled circle inside a hollow circle ⦿** — the end of the
+   workflow.
+   ```
+      ⬤  = initial node (start)     ⦿  = final node (end)
+   ```
+
+**The trip-creation example (complete workflow):**
+
+```
+   ⬤ ──▶ [User creates new trip] ──▶ [Prompt for name] ──▶ [Check name exists]
+                                                                  │
+                                                                  ▼
+                                                               ◇ ──[name taken]──▶ [Ask new name/cancel]
+                                                                  │                       │
+                                                                  │ [cancel]              │ [try again]
+                                                                  ▼                       │
+                                                               ⦿ (end)                   ◇ (merge) ◀──┘
+                                                                  │ [name available]
+                                                                  ▼
+                                                           [Fill in trip data] ──▶ [Save] ──▶ ▬ (fork)
+                                                                                                  ╱ ╲
+                                                                                     [Store local]  [Upload cloud]
+                                                                                                  ╲ ╱
+                                                                                                   ▬ (join)
+                                                                                                    │
+                                                                                                    ▼
+                                                                                              [Inform: success]
+                                                                                                    │
+                                                                                                    ▼
+                                                                                                   ⦿ (end)
+```
+
+Shows everything: initial, actions, decision (name taken?), merge (try again),
+fork (save + upload in parallel), join (wait for both), final.
+
+**Who it's for:**
+> *"Especially useful for **technical audiences** who need to understand the
+> **inner workings** of a system."* — activity diagrams lean technical; they
+> show the *how* of a process in detail.
+
+---
+
+### Lecture 14 — Statechart Diagrams
+
+**"How does one object change over its life?"**
+
+> *"This diagram is used to model the **object's states and state transitions**
+> over its **lifetime**."*
+
+The most focused of the three: tracks **a single object** through its entire
+life. Not interactions (sequence) or a workflow (activity) — but **how one
+object's state changes** from birth to death. Recall Section 03, L2: an object's
+**state** = its properties + current values.
+
+**Three building blocks:**
+
+1. **State — a rounded rectangle** 🔵 — *"the current **condition** of an
+   object."* Trip example states: **"Initialized," "Edited," "Saved,"
+   "Completed."**
+   ```
+      ╭──────────────╮
+      │  Initialized  │   ← rounded rectangle = one state
+      ╰──────────────╯
+   ```
+2. **Transition — an arrow ➡️** — shows the object **moves from one state to
+   another.** Arrowhead points to the **new state**.
+3. **Event — the label on the arrow** 🏷️ — *"A transition occurs as a
+   **response to an event**."* Example: when the user **clicks Save**, the Trip
+   transitions from "Edited" → "Saved." The event `clickSave` labels the arrow.
+
+**Optional guard — a Boolean condition in brackets `[]`:**
+> *"A guard is a Boolean condition that **must be met** for the transition to
+> occur."*
+
+Example: add `[mandatory fields filled]` to the Uninitialized → Saved transition
+→ the Trip only saves if all mandatory fields are filled. Same guard concept as
+activity diagrams. Format: `event [guard]` — transition fires only if BOTH the
+event happens AND the guard is true.
+
+**Start & end:**
+- **Initial pseudo-state — a filled circle ⬤** — points to the object's first
+  state ("Uninitialized"). Same symbol as activity diagrams.
+- **Final state — a filled circle inside a hollow circle ⦿** — the object has
+  been **destroyed**. Same symbol as activity diagrams.
+
+**The complete Trip statechart:**
+
+```
+   ⬤
+    │
+    ▼
+   ╭──────────────╮  startEditing  ╭──────────╮  clickSave  ╭────────╮
+   │ Uninitialized │ ─────────────▶ │  Edited   │ ──────────▶ │  Saved  │
+   ╰──────────────╯                ╰──────────╯             ╰────────╯
+         │ clickSave [mandatory fields filled]                      │
+         │ ────────────────────────────────────────────────────▶ Saved │
+         │ (shortcut: skip Edited if valid)                          │
+                                                              completeTrip
+                                                                      ▼
+                                                              ╭─────────────╮
+                                                              │  Completed   │
+                                                              ╰─────────────╯
+                                                                      │ deleteTrip
+                                                                      ▼
+                                                                    ⦿ (final — object destroyed)
+```
+
+A Trip: born (Uninitialized) → edited (Edited) → saved (Saved) → completed
+(Completed) → deleted (final). Each arrow = an event triggering the transition.
+The guard prevents saving without required fields.
+
+**Why it's powerful:**
+> *"It can help you visualize complex state machines and avoid issues such as
+> **dead end states** that are hard to spot just by looking at the source code."*
+
+A **dead end state** = a state with no outgoing arrows (the object is stuck).
+The diagram makes these **visible** — if you see a state with no exits, that's a
+bug to fix. Code alone hides this; the diagram reveals it.
+
+---
+
+### The three behavioral diagrams — side by side
+
+| Diagram | Question | Focus | Key elements | Metaphor |
+|---|---|---|---|---|
+| **Sequence** (L12) | Who talks to who, and when? | Interactions between objects in one scenario | Object boxes, lifelines, messages | A chat log 📋 |
+| **Activity** (L13) | What steps happen, in what order? | A workflow/process (decisions, parallel paths) | Actions, flows, decisions ◇, forks/joins ▬ | A flowchart 🔄 |
+| **Statechart** (L14) | How does one object change over its life? | One object's states and transitions | States (rounded rects), transitions, events, guards | A traffic light 🚦 |
+
+**How to choose:**
+```
+   Objects sending messages to each other over time?  → Sequence diagram
+   Step-by-step process with decisions & parallel?    → Activity diagram
+   Single object's state changes from birth to death? → Statechart diagram
+```
+
+### Tying the behavioral family back to everything
+
+| Concept from before | How it appears in behavioral diagrams |
+|---|---|
+| **Objects** (Section 03, L2) | Sequence shows objects (`aTrip`, not `Trip`) communicating |
+| **State** (Section 03, L2) | Statechart tracks an object's state changes over its lifetime |
+| **Behavior/methods** (Section 03, L2-3) | Sequence messages = method calls between objects |
+| **Abstraction (Pillar 1)** | Sequence focuses on "the most relevant parts," not every call |
+| **OOAD process** (Section 04) | These = Phase 4 (describe behavior visually); drawing them may reveal missing classes → iterate |
+| **Use case scenarios** (Section 04) | A sequence diagram visualizes ONE scenario from a use case |
+| **Static vs. dynamic** | Structural = static (photo); behavioral = dynamic (video) |
+
+**The beautiful full-circle:** In Section 03, L2, we learned an object has
+**identity, state, and behavior.** Now look at how UML draws each:
+- **Identity** → the object box at the top of a sequence diagram (`aTrip : Trip`)
+- **State** → the statechart diagram (tracks state changes over the object's life)
+- **Behavior** → the sequence diagram (shows the method calls = behavior in action)
+
+**The three parts of an object now have their three diagrams.** Everything
+connects. 🎯
+
+---
+
+_Notes for lecture 15 (quiz) will be added as we progress._
